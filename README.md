@@ -19,3 +19,10 @@ Models are evaluated based on their accuracy in predicting the correct emotion c
 ## Original Competition
 
 https://www.kaggle.com/competitions/challenges-in-representation-learning-facial-expression-recognition-challenge/overview
+
+
+# დავიწყოთ:
+
+კაი ნუ წავიკითხე პირობა, 2013 ისე კაი ცოტა ფულს უხდიდნენ მოგებულს (300$) -თან კაი რეპორტებიც წერეთო მარა როგორც ჩანს არ იყო განვითარებული ეს სფერო. ოქეი, 48x48 pixel ესეთი სურათები გვაქ, (0=Angry, 1=Disgust, 2=Fear, 3=Happy, 4=Sad, 5=Surprise, 6=Neutral) 7 კატეგორიით. 28,709 ამდენი განსხვავებული სახე გვაქ- ნუ არც თუ ისე დიდი დატასეტია მარა ალბათ არ დაგვჭირდება მეტი. ფოტოები რო არაა ცოტა ცუდია მარა ალბათ კომფიდენციალურობის თემაა და მაგიტო ( პიქსელები ჩანს მხოლოდ).
+
+დავიწყოთ colab-ში მუშაობა.
