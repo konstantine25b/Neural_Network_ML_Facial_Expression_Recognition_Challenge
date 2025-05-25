@@ -31,6 +31,7 @@ https://www.kaggle.com/competitions/challenges-in-representation-learning-facial
 # წავიდა მუშაობა.
 
 # EXPERIMENT 1
+
 ფაილი: Facial_Expression_Recognition_1.ipynb
 
 დავაყენე საჭირო რაღაცეები და გადმოვტვირთე kaggle dataset.
@@ -68,7 +69,7 @@ Validation set size: 5168 (18.0%)
 Test set size: 2871 (10.0%) -ესე გავყავი data - თავიდან დამავიწყდა data-ს გაყოფა და ამიტო წავშალე კოდი და ეხა ახლიდან
 მარა ყველაფერს იგივეს ვაკეთებ და ეხა ვაგრძელებ ტრეინინგიდან.
 ნორმალიზაცია გავუკეთე პიქსელებს. batch size -64 გვექნება დასაწყისისთვის lr- 0.02 , epochs - 10.
- 
+
 დაიწყო ტრეინინგი ვნახოთ პირველ ცდაზე რა გვექნება შედეგი.
 
 იდეაში მარტივი მოდელია მარა 5 წუთამდე დრო მაინც წაიღო.
@@ -106,7 +107,7 @@ Epoch 10/10, Train Loss: 1.9689, Train Acc: 30.33%, Val Loss: 2.0559, Val Acc: 3
 
 Test Loss: 1.9764, Test Accuracy: 30.30%
 
-ჰმმ, ნუ იგივეა რაც ვალიდაციის სეტზე დაახლოებით. 
+ჰმმ, ნუ იგივეა რაც ვალიდაციის სეტზე დაახლოებით.
 
                 precision    recall  f1-score   support
 
@@ -119,20 +120,21 @@ Test Loss: 1.9764, Test Accuracy: 30.30%
      Neutral       0.21      0.57      0.31       496
 
     accuracy                           0.30      2871
-   macro avg       0.25      0.24      0.22      2871
-weighted avg       0.30      0.30      0.28      2871
+
+macro avg 0.25 0.24 0.22 2871
+weighted avg 0.30 0.30 0.28 2871
 
 ბევრი რამის გამო გვაქ ესეთი შედეგი: ჰიპერპარამეტრები, არარი მოდელი კომპლექსური, შეიძლება სადღაც გრადიენტის გვიქრება მარა მაგას შემდეგ ექსპერიმენტებში გავტესტავ ეხა უბრალოდ მაინტერესებდა თუ მუშაობდა ამიტო აბდა უბდაა იდეაში.
 
 Run summary:
 
-epoch	10
-test_accuracy	30.30303
-test_loss	1.97643
-train_accuracy	30.33382
-train_loss	1.96885
-val_accuracy	30.65015
-val_loss	2.0559
+epoch 10
+test_accuracy 30.30303
+test_loss 1.97643
+train_accuracy 30.33382
+train_loss 1.96885
+val_accuracy 30.65015
+val_loss 2.0559
 
 https://wandb.ai/konstantine25b-free-university-of-tbilisi-/Facial_Expression_Recognition_1?nw=nwuserkonstantine25b
 
@@ -143,6 +145,110 @@ Using nbformat v5.10.4 and nbconvert v7.16.6
 ნუ ახლიდანაც გავუშვი, სემდეგ გადმოვწერე ნოუთბუქი და ისე ავტვირთე მარა სანამ ყველა output არ წავშალე მანამდე არ მოეხსნა ეს ერორი. ამიტომ githubze ეს ipynb ფაილი output-ების გარეშეა.
 
 # EXPERIMENT 2
+
 # კაი ეხა გავაუმჯობესოთ და სხვა ექსპერიმენტი დავიწყოთ:
 
-ფაილი: Facial_Expression_Recognition_1.ipynb
+ფაილი: Facial_Expression_Recognition_2.ipynb
+
+მოკლედ ახლა უკვე გავართულოთ მოდელი, learning rate იყოს 0.001,
+batch 32, epochs 20, ასევე შემოვიღოთ dropout როგორც ლექციებზე ვქენით და იყოს 0.3. და ასევე weight decay-ც შემოვიღოთ.
+იგივენაირად დატა ლოადინგი, flattening, ნორმალიზაცია.
+
+ახლა ავდგეთ და ვნახოთ თუ მოხდება overfit როცა 20 ცალუ გვაქ.
+მაგრამ ჯერ ავაგოთ მარტივი CNN. 
+გამოვიყენოთ BatchNormalization and max pooling და dropout.
+
+ნუ adamს და crossentropyloss-ს ვიყენებთ როგორც წესია.
+
+ამასტან ერთად დავამატე ReduceLROnPlateau რომელიც როცა მოდელი წვალობს გაუსწორებს lr-ს და დაეხმარება სწავლაში.
+
+გავუშვი მოდელი 20 ცალ დატაზე და ვნახოთ თუ წავა ოვერფიტში:
+Overfit Epoch 1/30, Loss: 1.9313, Acc: 30.00%
+Overfit Epoch 2/30, Loss: 2.2543, Acc: 55.00%
+Overfit Epoch 3/30, Loss: 1.3586, Acc: 50.00%
+Overfit Epoch 4/30, Loss: 1.6047, Acc: 55.00%
+Overfit Epoch 5/30, Loss: 1.4360, Acc: 50.00%
+Overfit Epoch 6/30, Loss: 0.5932, Acc: 80.00%
+Overfit Epoch 7/30, Loss: 0.5074, Acc: 70.00%
+Overfit Epoch 8/30, Loss: 0.7377, Acc: 75.00%
+Overfit Epoch 9/30, Loss: 0.3926, Acc: 90.00%
+Overfit Epoch 10/30, Loss: 0.2310, Acc: 85.00%
+Overfit Epoch 11/30, Loss: 0.1551, Acc: 95.00%
+Overfit Epoch 12/30, Loss: 0.0240, Acc: 100.00%
+Overfit Epoch 13/30, Loss: 0.1456, Acc: 90.00%
+Overfit Epoch 14/30, Loss: 0.0368, Acc: 100.00%
+Overfit Epoch 15/30, Loss: 0.0266, Acc: 100.00%
+Overfit Epoch 16/30, Loss: 0.0316, Acc: 100.00%
+Overfit Epoch 17/30, Loss: 0.0530, Acc: 100.00%
+Overfit Epoch 18/30, Loss: 0.0068, Acc: 100.00%
+Overfit Epoch 19/30, Loss: 0.0046, Acc: 100.00%
+Overfit Epoch 20/30, Loss: 0.0081, Acc: 100.00%
+Overfit Epoch 21/30, Loss: 0.0096, Acc: 100.00%
+Overfit Epoch 22/30, Loss: 0.0051, Acc: 100.00%
+Overfit Epoch 23/30, Loss: 0.0023, Acc: 100.00%
+Overfit Epoch 24/30, Loss: 0.0025, Acc: 100.00%
+Overfit Epoch 25/30, Loss: 0.0069, Acc: 100.00%
+Overfit Epoch 26/30, Loss: 0.0761, Acc: 95.00%
+Overfit Epoch 27/30, Loss: 0.0237, Acc: 100.00%
+Overfit Epoch 28/30, Loss: 0.0058, Acc: 100.00%
+Overfit Epoch 29/30, Loss: 0.0453, Acc: 100.00%
+Overfit Epoch 30/30, Loss: 0.0006, Acc: 100.00%
+
+კი წავიდა ოვერფიტში ამიტომ ნაკლები შანსია vanishing gradient-ის
+
+ახლა კიდე გავუშვი დასატრეინინგებლად და ალბათ კაი 1 საათი ან მეტი დაჭირდება
+
+გათიშვა მომიწია რადგან შევამჩნიე რომ cpu-ს იყენებდა da cuda-ზე გადართვა დამავიწყდა ამიტომ ალბათ ბევრად ნაკლებ დროში იზავს ახლიდან გავუშვი ეხა.
+აქაც 20 ცალი ისევ ოვერფიტში წავიდა.
+კიდე კაი cuda ჩავრთე ალბათ 15 წუთში დაასრულებს ტრეინინგს.
+
+Epoch 16/20, Train Loss: 1.1178, Train Acc: 55.14%, Val Loss: 1.3190, Val Acc: 52.24%
+New best model saved with validation accuracy: 52.24%
+Epoch 17/20: 100%
+ 646/646 [00:21<00:00, 35.17it/s, loss=1.06, acc=56.9]
+Epoch 17/20, Train Loss: 1.0781, Train Acc: 56.88%, Val Loss: 1.3218, Val Acc: 53.31%
+New best model saved with validation accuracy: 53.31%
+Epoch 18/20: 100%
+ 646/646 [00:22<00:00, 26.34it/s, loss=1.17, acc=58.8]
+Epoch 18/20, Train Loss: 1.0235, Train Acc: 58.79%, Val Loss: 1.3228, Val Acc: 53.70%
+New best model saved with validation accuracy: 53.70%
+Epoch 19/20: 100%
+ 646/646 [00:20<00:00, 25.43it/s, loss=1.06, acc=59.8]
+Epoch 19/20, Train Loss: 0.9983, Train Acc: 59.83%, Val Loss: 1.3236, Val Acc: 52.84%
+Epoch 20/20: 100%
+ 646/646 [00:20<00:00, 39.83it/s, loss=1.06, acc=60.9]
+Epoch 20/20, Train Loss: 0.9673, Train Acc: 60.90%, Val Loss: 1.3468, Val Acc: 53.93%
+New best model saved with validation accuracy: 53.93%
+
+Test Accuracy: 54.37%
+
+ხო ეს წინა მოდელზე ბევრად უკეთესია.
+
+                 precision    recall  f1-score   support
+
+       Angry       0.46      0.41      0.43       399
+     Disgust       0.00      0.00      0.00        44
+        Fear       0.38      0.32      0.35       410
+       Happy       0.76      0.77      0.76       722
+         Sad       0.39      0.57      0.47       483
+    Surprise       0.71      0.63      0.67       317
+     Neutral       0.51      0.48      0.49       496
+
+    accuracy                           0.54      2871
+   macro avg       0.46      0.45      0.45      2871
+weighted avg       0.54      0.54      0.54      2871
+
+# გითჰუბზე კიდევ იგივე ერორი ქონდა მაგრამ როცა დავკლონე იმუშავა ჩვეულებრივად და ყველაფერი მიჩანს, როგორც ჩანს უბრალოდ გითჰუბს არ აქ სუფორთი რო აჩვენოს vs code-ში colab-ში მიღებული output-ები ჩვეულებრივად ჩანს. 
+მაგრამ მოდი მაინც ავტვირთავ output-ების გარეშე რო თუ გადმოწერის დრო არ გექნებათ პირდაპირ შეხედოთ რო კოდი სწორად წერია :)
+
+
+https://wandb.ai/konstantine25b-free-university-of-tbilisi-/Facial_Expression_Recognition_2?nw=nwuserkonstantine25b
+
+# Experiment 3
+
+ფაილი: Facial_Expression_Recognition_3.ipynb
+
+კიდე უკეთესი შეგვიძლია ალბათ კომპლექსურობას თუ გავუზრდით მოდელს და სხვადასხვა ახალ რაღაცეებს შევხედავთ.
+
+
+
