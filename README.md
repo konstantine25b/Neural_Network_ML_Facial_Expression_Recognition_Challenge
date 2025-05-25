@@ -136,6 +136,12 @@ val_loss	2.0559
 
 https://wandb.ai/konstantine25b-free-university-of-tbilisi-/Facial_Expression_Recognition_1?nw=nwuserkonstantine25b
 
+მოკლედ როცა github-ზე გადატანა ვცადე ამ ერორს მიგდებდა:
+Invalid Notebook
+There was an error rendering your Notebook: the 'state' key is missing from 'metadata.widgets'. Add 'state' to each, or remove 'metadata.widgets'.
+Using nbformat v5.10.4 and nbconvert v7.16.6
+ნუ ახლიდანაც გავუშვი, სემდეგ გადმოვწერე ნოუთბუქი და ისე ავტვირთე მარა სანამ ყველა output არ წავშალე მანამდე არ მოეხსნა ეს ერორი. ამიტომ githubze ეს ipynb ფაილი output-ების გარეშეა.
+
 # EXPERIMENT 2
 # კაი ეხა გავაუმჯობესოთ და სხვა ექსპერიმენტი დავიწყოთ:
 
