@@ -134,6 +134,8 @@ train_loss	1.96885
 val_accuracy	30.65015
 val_loss	2.0559
 
+https://wandb.ai/konstantine25b-free-university-of-tbilisi-/Facial_Expression_Recognition_1?nw=nwuserkonstantine25b
+
 # EXPERIMENT 2
 # კაი ეხა გავაუმჯობესოთ და სხვა ექსპერიმენტი დავიწყოთ:
 
