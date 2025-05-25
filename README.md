@@ -250,5 +250,198 @@ https://wandb.ai/konstantine25b-free-university-of-tbilisi-/Facial_Expression_Re
 
 კიდე უკეთესი შეგვიძლია ალბათ კომპლექსურობას თუ გავუზრდით მოდელს და სხვადასხვა ახალ რაღაცეებს შევხედავთ.
 
+ამ შემთხვევაშიც დატა იგივე ნაირად მოგვაქ, დაკავშირებაც იგივე ნაირად. უბრალოდ ცოტა სხვა მიდგომებს და სხვა ჰიპერპარამეტრებით გავტესტავ.
 
+აქ უკვე გვინდა სხვა ბევრი ჰიპერპარამეტრის გატესტვა ამიტო Sweet config გვაქ.
+
+დავამატე ესენი 
+transforms.RandomHorizontalFlip(), - ამიტ ვფლიპავთ ფოტოს და ეს გვეხმარება რომ მარცხნიდავ და მარჯვნიდან ორივე ნაირად შევხედოთ.
+transforms.RandomRotation(10), ამითი rotations ვუკეთებთ და ესეც ერთგვარად გვეხმარება.
+
+
+რაც შეეხებე თვითონ მოდელს ეს ბევრად უფრო კომპლექსურია წინასთან შედარებით.  გვაქვს Fully Connected Layer და 3 cnn.
+
+ასევე BatchNorm, dropout და maxPooling.
+
+გავტესტოთ 20 ცალზე:
+Overfit Epoch 1/30, Loss: 2.4100, Acc: 15.00%
+Overfit Epoch 2/30, Loss: 1.3525, Acc: 40.00%
+Overfit Epoch 3/30, Loss: 1.4272, Acc: 60.00%
+Overfit Epoch 4/30, Loss: 1.0353, Acc: 85.00%
+Overfit Epoch 5/30, Loss: 1.1916, Acc: 80.00%
+Overfit Epoch 6/30, Loss: 0.9157, Acc: 85.00%
+Overfit Epoch 7/30, Loss: 1.0702, Acc: 80.00%
+Overfit Epoch 8/30, Loss: 0.9121, Acc: 80.00%
+Overfit Epoch 9/30, Loss: 0.7126, Acc: 90.00%
+Overfit Epoch 10/30, Loss: 0.6071, Acc: 90.00%
+Overfit Epoch 11/30, Loss: 0.7348, Acc: 90.00%
+Overfit Epoch 12/30, Loss: 0.6527, Acc: 90.00%
+Overfit Epoch 13/30, Loss: 0.4649, Acc: 100.00%
+Overfit Epoch 14/30, Loss: 0.8879, Acc: 85.00%
+Overfit Epoch 15/30, Loss: 0.5619, Acc: 95.00%
+Overfit Epoch 16/30, Loss: 0.7871, Acc: 90.00%
+Overfit Epoch 17/30, Loss: 0.3112, Acc: 100.00%
+Overfit Epoch 18/30, Loss: 0.5016, Acc: 100.00%
+Overfit Epoch 19/30, Loss: 0.3922, Acc: 90.00%
+Overfit Epoch 20/30, Loss: 0.3409, Acc: 100.00%
+Overfit Epoch 21/30, Loss: 0.4077, Acc: 100.00%
+Overfit Epoch 22/30, Loss: 0.4692, Acc: 95.00%
+Overfit Epoch 23/30, Loss: 0.4481, Acc: 95.00%
+Overfit Epoch 24/30, Loss: 0.4839, Acc: 95.00%
+Overfit Epoch 25/30, Loss: 0.4620, Acc: 95.00%
+Overfit Epoch 26/30, Loss: 0.3034, Acc: 100.00%
+Overfit Epoch 27/30, Loss: 0.2267, Acc: 100.00%
+Overfit Epoch 28/30, Loss: 0.3239, Acc: 100.00%
+Overfit Epoch 29/30, Loss: 0.2927, Acc: 100.00%
+Overfit Epoch 30/30, Loss: 0.2521, Acc: 100.00%
+
+აქაც ჩააბარა გამოცდა და ოვერფიტშია.
+
+ჯერ გავუშვებ default პარამეტრებით 
+default_config = {
+    'learning_rate': 0.001,
+    'batch_size': 64,
+    'dropout_rate': 0.3,
+    'weight_decay': 1e-5,
+    'hidden_dim': 128
+}
+შემდეგ უკვე პარამატრებს გავტესტავ.
+
+default- პარამეტრებს ალბათ დაჭირდება 20 წუთი, ვნახოთ.
+
+
+Epoch 20/30, Train Loss: 1.0496, Train Acc: 60.04%, Val Loss: 1.1220, Val Acc: 57.95%
+Epoch 21/30 [Train]: 100%
+ 323/323 [00:20<00:00, 18.34it/s]
+Epoch 21/30, Train Loss: 1.0501, Train Acc: 60.30%, Val Loss: 1.1130, Val Acc: 58.44%
+Epoch 22/30 [Train]: 100%
+ 323/323 [00:20<00:00, 18.48it/s]
+Epoch 22/30, Train Loss: 0.9931, Train Acc: 62.84%, Val Loss: 1.0611, Val Acc: 60.20%
+Model improved! Saved checkpoint (Val Acc: 60.20%)
+Epoch 23/30 [Train]: 100%
+ 323/323 [00:20<00:00, 18.35it/s]
+Epoch 23/30, Train Loss: 0.9644, Train Acc: 63.77%, Val Loss: 1.0608, Val Acc: 60.86%
+Model improved! Saved checkpoint (Val Acc: 60.86%)
+Epoch 24/30 [Train]: 100%
+ 323/323 [00:22<00:00, 17.54it/s]
+Epoch 24/30, Train Loss: 0.9536, Train Acc: 64.08%, Val Loss: 1.0762, Val Acc: 59.98%
+Epoch 25/30 [Train]: 100%
+ 323/323 [00:23<00:00, 12.45it/s]
+Epoch 25/30, Train Loss: 0.9343, Train Acc: 64.80%, Val Loss: 1.0759, Val Acc: 60.14%
+Epoch 26/30 [Train]: 100%
+ 323/323 [00:40<00:00, 17.54it/s]
+Epoch 26/30, Train Loss: 0.9253, Train Acc: 65.14%, Val Loss: 1.0913, Val Acc: 59.27%
+Epoch 27/30 [Train]: 100%
+ 323/323 [00:20<00:00, 18.21it/s]
+Epoch 27/30, Train Loss: 0.9224, Train Acc: 65.14%, Val Loss: 1.0834, Val Acc: 59.73%
+Epoch 28/30 [Train]: 100%
+ 323/323 [00:21<00:00, 20.77it/s]
+Epoch 28/30, Train Loss: 0.8668, Train Acc: 67.33%, Val Loss: 1.0783, Val Acc: 60.14%
+Epoch 29/30 [Train]: 100%
+ 323/323 [00:22<00:00, 17.79it/s]
+Epoch 29/30, Train Loss: 0.8481, Train Acc: 68.48%, Val Loss: 1.0876, Val Acc: 60.47%
+Epoch 30/30 [Train]: 100%
+ 323/323 [00:23<00:00, 12.85it/s]
+Epoch 30/30, Train Loss: 0.8382, Train Acc: 68.72%, Val Loss: 1.0855, Val Acc: 60.49%
+Final Test Accuracy: 60.64%
+
+
+ანუ ვალიდაცია 60 % მდე ავიყვანეთ უკეთესია.
+
+ასევე რო შევხედოთ ცხრილს თავიდან confusion matrix-ში არ იყო საერთოდ disgust- მაგრამ თანდათან დაემატა.
+
+კაი ეხა გავუშვი 
+print("\nRunning hyperparameter sweep to find the best model...")
+wandb.agent(sweep_id, train_model, count=3)
+
+რაც ადგება და ჰიპერპარამეტრებს გატესტავს
+
+პირველი ვარიანტი:
+wandb: 	batch_size: 128
+wandb: 	dropout_rate: 0.2
+wandb: 	hidden_dim: 64
+wandb: 	learning_rate: 0.001
+wandb: 	weight_decay: 1e-06
+
+აქ ცოტა დიდი Batch გვაქ, 
+dropout ნორმალური ზომისაა, lr დაბალია მარა ნორმალურია მაინც.
+რაც შეეხება: weight_decay - ეს მცირე რეგულარიზაციაა. 
+
+ Epoch 18/20, Train Loss: 0.8629, Train Acc: 67.25%, Val Loss: 1.1197, Val Acc: 60.20%
+Model improved! Saved checkpoint (Val Acc: 60.20%)
+Epoch 19/20 [Train]: 100%
+ 162/162 [00:20<00:00,  9.26it/s]
+Epoch 19/20, Train Loss: 0.8508, Train Acc: 67.94%, Val Loss: 1.1244, Val Acc: 60.12%
+Epoch 20/20 [Train]: 100%
+ 162/162 [00:21<00:00,  9.62it/s]
+Epoch 20/20, Train Loss: 0.8234, Train Acc: 69.19%, Val Loss: 1.1234, Val Acc: 60.45%
+Model improved! Saved checkpoint (Val Acc: 60.45%)
+Final Test Accuracy: 60.61%
+
+მეორე ვარიანტი: 
+wandb: 	batch_size: 32
+wandb: 	dropout_rate: 0.3
+wandb: 	hidden_dim: 128
+wandb: 	learning_rate: 0.01
+wandb: 	weight_decay: 1e-06
+
+აქ მცირე batch_size, dropout ნორმალურია, hidden_dim საშუალოზე ოდნავ დიდია. learning_rate მაღალია ვფიქრობ უფრო პატარა უკეთესი იქნება მარა მაინც გავტესტოთ.
+
+Epoch 18/20, Train Loss: 0.9889, Train Acc: 62.61%, Val Loss: 1.1044, Val Acc: 59.33%
+Epoch 19/20 [Train]: 100%
+ 646/646 [00:23<00:00, 27.80it/s]
+Epoch 19/20, Train Loss: 0.9655, Train Acc: 63.59%, Val Loss: 1.1155, Val Acc: 60.06%
+Model improved! Saved checkpoint (Val Acc: 60.06%)
+Epoch 20/20 [Train]: 100%
+ 646/646 [00:24<00:00, 32.47it/s]
+Epoch 20/20, Train Loss: 0.9518, Train Acc: 63.59%, Val Loss: 1.1270, Val Acc: 59.42%
+Final Test Accuracy: 60.61%
+
+მესამე ვარიანტი: 
+
+wandb: 	batch_size: 32
+wandb: 	dropout_rate: 0.2
+wandb: 	hidden_dim: 256
+wandb: 	learning_rate: 0.005
+wandb: 	weight_decay: 0.0001
+
+აქ მცირე batch_size, dropout ნორმალურია, hidden_dim საშუალოზე დიდია. learning_rate მაღალია ვფიქრობ რომ ნორმალურია. decay ნორმალურია.
+
+
+Epoch 18/20, Train Loss: 1.0205, Train Acc: 61.46%, Val Loss: 1.0957, Val Acc: 59.67%
+Epoch 19/20 [Train]: 100%
+ 646/646 [00:24<00:00, 20.69it/s]
+Epoch 19/20, Train Loss: 1.0042, Train Acc: 61.90%, Val Loss: 1.0868, Val Acc: 59.89%
+Epoch 20/20 [Train]: 100%
+ 646/646 [00:24<00:00, 22.76it/s]
+Epoch 20/20, Train Loss: 0.9929, Train Acc: 62.31%, Val Loss: 1.0840, Val Acc: 59.42%
+Final Test Accuracy: 60.99%
+
+ხოლო ბოლოს საბოლოო ამ მოდელის ტესტინგი:
+
+Final Test Accuracy with best model: 60.61%
+
+Classification Report:
+                 precision    recall  f1-score   support
+
+       Angry       0.52      0.51      0.51       399
+     Disgust       0.70      0.32      0.44        44
+        Fear       0.46      0.39      0.42       410
+       Happy       0.83      0.80      0.81       722
+         Sad       0.45      0.61      0.52       483
+    Surprise       0.71      0.71      0.71       317
+     Neutral       0.60      0.53      0.56       496
+
+    accuracy                           0.61      2871
+   macro avg       0.61      0.55      0.57      2871
+weighted avg       0.61      0.61      0.61      2871
+
+Best run found: scarlet-sweep-1
+Best validation accuracy: 60.45%
+ამ შემთხვევაში მიღეთ რომ ეს არის საუკეთესო ჰიპერპარამეტრებიანი მოდელი.
+Hyperparameters: {'batch_size': 128, 'hidden_dim': 64, 'dropout_rate': 0.2, 'weight_decay': 1e-06, 'learning_rate': 0.001}
+
+ანუ აქ უკვე 60%+ ზე ვართ ასულები.
+
+აქვე ანალოგიურად როგორც მეორეში და პირველში გითჰუბზე არ ჩანს გამოვიკვლიე და პრობლემა აქვს ტრეინინგს რომ ვუშვებ მანდ ჩემი აზრით თითოეული ეპოქის პრეოგრეს bar ებს ვერ აღიქვამს გითჰუბი. ნუ ეგ ვერ დავფიქსე ამიტო თუ ნახვა გინდათ უშუალოდჩამოტვირთეთ ფაილი ან რეფო და vs code-ში გამოჩნდება outputebi. output-ების გარეშე ავტვირთავ დამატებით.
 
