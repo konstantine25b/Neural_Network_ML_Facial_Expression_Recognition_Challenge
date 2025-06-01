@@ -456,3 +456,299 @@ Hyperparameters: {'batch_size': 128, 'hidden_dim': 64, 'dropout_rate': 0.2, 'wei
 # Experiment 4
 
 ფაილი: Facial_Expression_Recognition_4.ipynb
+
+აქაც გავაკეთებ იგივეს უბრალოდ გავტესტავ მეტ პარამეტრს და ასევე გამოვიყენებ რეზნეტს.
+
+ასევე დავამატებ პადდინგს, კონტრასტის ცვლილებას და ზოომუნგს უკეთესი გენერალიზაციისთვის. ესენი გვეხმარება რომ სურათები უკეთესად იქნეს აღქმადი.
+
+თავისთავად გავაკეთე ინიციალიზაციია წამოვიღე დატა.
+
+დავაკაბვშირე ვანდიბისთან ვიყენებთ ასევე კუდას (რომ უფრო სწრაფად დავატრეინინგოთ).
+
+FER2013Dataset ამ მეთოდით თავისთავად 48x48 პიქსელებად გადავაქცევ და ასევე გავუკეთებ ნორმალიზაციას ანუ ამ 0-255 რეინჯს გავყოფ 255 ზე რომ 0-1 მდე იყოს ხოლმე.
+
+
+get_transforms ამ მეთოდით კიდე როგორც ვთქვი ჰორიზონტალური ფლიპები, დატრიალებები, კონტრასტების ცვლიულებები, დაზუმვები იქნება გენერალიზაციისთვის.
+
+create_train_val_loaders , create_test_loader ამითი ჩვეულებრივად დატასეტი რომ გადაკეთდეს, ეს ორად გავყავი რადგან სამომავლოდ დაგვჭირდება მოდელის ჩამოტვირთვა wandb-დან
+
+ამის მერე უკვე ტრაინინგის კლასები:
+
+ResidualBlock ამ კლასში ხდება ასეთი რამე: 
+გვაქვს 3x3 conv ლეიერები ეს იმიტომ რომ ჯობია ყველას სტატისტიკურად რომ ვნახეთ 5x5 conv nets ანს ხვა უფრო დიდი ზომისების გამოყენებას 3x3ს დამცენიმეჯერ გამოყენება ჯობია.
+გვაქვს dropout გენერალიზაციისთვის. 
+
+resblock- გვჭირდება იმიტომ რომ vanishing gradient -ის პრობლემა მოვაგვაროთ skip connection-ის საშუალებით. დიდი ალბათობით ადრე convnet რომ გვქოინდა გრადიენტს ვკარგავდით ნელ ნელა ამიტომ ახლა ვეცდებიტ ნაკლებად დავკარგოთ.
+
+დანარენი ჩვეულებრივად.
+
+შემდეგ უკვე FacialExpressionResNet სადაც ხდება შემდეგი რამე:
+
+აქ გვაქ ჯერ 1 ლეიერი კონვოლუცია და შენდეგ 4 ლეიერის res ბლოკი. 
+
+ჰმმ, თავიდან 1 ცალი cnn გვაქ იმიტომ რომ ზოგადად დასაწყისში ვენიშინგ გრადიენტის პრობლემა არარის ასევე ვიცით რომ რესნეტი უფრო კომპლექსურია და დასაწყისში რომ ამოვიღოთ პირსაპირ კაი feuture-ები არ შეგვექმნება პრობლემ ამით.
+
+ამის მერე უკვე შეგვიძლია გავართულოთ და 4 ცალი resblock გავუშვათ. 64-> 128->256->512 ზოგადად ადრე 3 ცალ ლეიერებს ვიყენებდით და ავედით 60% მდე მგონია რომ რომ გავზარდოთ 
+უფრო მერტი შანსია რომ უკეთესი მოდელი დავდოთ.
+
+ბოლოს კიდე დროფაუთი, 
+ასევე AdaptiveAvgPool2d - ეს როგორც გავარკვიე და ვნახე უკეთესია იმიტომ რომ 
+maxpooling- მხოლოდ ერთ რამემდე დადის და უმაღლესს იღებს და ანუ პასუხობს კი ან არა.ხოლო AdaptiveAvgPool2d -ეს უკეთესია იმიტორო რამდენად კითხვას პასუხობს. 
+ჩემი აზრით soft და hard attention-ს გავს ეს საკითხი.
+ბოლოს კიდე fully connected layer რომ დავიდეთ 7 face expresion-მდე.
+
+test_overfitting -ეს ისევ იმიტომ რომ არგვქოინდეს თავიდანვე პრობლემა და თუ გვექნება დავინახოთ თავიდანვე.
+
+compute_loss - ეს ლოსისთვის.
+
+train_model - აქ უკვე ხდება მთავარი ნაწილი ანუ ტრეინინგი
+evaluate_model_on_testset- აქ შემდეგში რომ გამოვიყენო ტესტსეტზე.
+sweep_config = {
+    'method': 'bayes',
+    'metric': {
+        'name': 'best_val_accuracy',
+        'goal': 'maximize'
+    },
+    'parameters': {
+        'learning_rate': {
+            'distribution': 'log_uniform_values',
+            'min': 0.0001,
+            'max': 0.01
+        },
+        'batch_size': {
+            'values': [32, 64, 128]
+        },
+        'dropout_rate': {
+            'distribution': 'uniform',
+            'min': 0.3,
+            'max': 0.7
+        },
+        'weight_decay': {
+            'distribution': 'log_uniform_values',
+            'min': 1e-6,
+            'max': 1e-3
+        },
+        'label_smoothing': {
+            'distribution': 'uniform',
+            'min': 0.0,
+            'max': 0.2
+        },
+        'epochs': {
+            'value': 25
+        },
+        'patience': {
+            'value': 8
+        }
+    }
+}
+ხოო ეს უკვე ჰიპერპარამეტრებია: გვაქვს 25 ეპოქა, და 8 patience რაც ნიშნავს რომ 8 ცალ ეპოქაში თუ არ იყო განსხვავებები მაშინ დაასრლოს მუშაობა.
+lr- ში მოდელი შეძლებს თვითონ მიხვდეს რა უნდა იყოს რეიტი სსწავლის.
+
+batch_size  32, 64, 128 გავტესტავთ
+
+dropout - 'min': 0.3, 'max': 0.7 ამათ შორის აირჩევს ხოლმე ნორმალური განაწილებით ( უკეთესი გენერალიზაციისთვის)
+
+weight_decay -ესეც დაახლოებით იგიბვე ნაირად როგორც lr
+
+label_smoothing- ეს ვიპოვე და ანუ კარგია რომ overconfident-არ იყოს მოდელი.
+
+
+დავიწყოთ ტრეინინგი:
+
+Testing model architecture with overfitting on small dataset...
+Overfit Epoch 1/30, Loss: 2.4551, Acc: 15.00%
+Overfit Epoch 2/30, Loss: 1.9424, Acc: 10.00%
+Overfit Epoch 3/30, Loss: 1.8984, Acc: 20.00%
+Overfit Epoch 4/30, Loss: 1.7043, Acc: 20.00%
+Overfit Epoch 5/30, Loss: 1.5219, Acc: 35.00%
+Overfit Epoch 6/30, Loss: 1.2151, Acc: 70.00%
+Overfit Epoch 7/30, Loss: 0.9075, Acc: 75.00%
+Overfit Epoch 8/30, Loss: 0.6455, Acc: 75.00%
+Overfit Epoch 9/30, Loss: 0.4682, Acc: 95.00%
+Model can overfit successfully!
+Overfitting test completed.
+
+კაია test_overfitting() მა კარგად იმუშავა.
+
+
+დავიწყეთ ტრეინინგი
+
+wandb.agent(sweep_id, train_model, count=3)
+
+ამით დავრანავთ 3 განსხვავებული ჰიპერპარამეტრის კომბინაციით.
+
+ალბათ 1-2 საათი დაჭირდება. 
+
+ჩემი აზრით 70% მაინც უნდა დავდოთ ტესტსეტზე.
+ვნახოთ აბა რა იქნება
+
+wandb: Agent Starting Run: euczqib4 with config:
+wandb: 	batch_size: 128
+wandb: 	dropout_rate: 0.3362882088171564
+wandb: 	epochs: 25
+wandb: 	label_smoothing: 0.1560930322152969
+wandb: 	learning_rate: 0.001110935709956254
+wandb: 	patience: 8
+wandb: 	weight_decay: 7.043022279825436e-05
+
+ნუ პირველი ეტაპი დამთავრდა 
+
+Epoch 20/25 [Train]: 100%|██████████| 180/180 [00:25<00:00,  7.13it/s, loss=0.684, acc=97.9%]
+Epoch 20/25, Train Loss: 0.6838, Train Acc: 97.94%, Val Loss: 1.6796, Val Acc: 57.77%
+Epoch 21/25 [Train]: 100%|██████████| 180/180 [00:25<00:00,  7.19it/s, loss=0.738, acc=98.6%]
+Epoch 21/25, Train Loss: 0.6707, Train Acc: 98.60%, Val Loss: 1.6724, Val Acc: 57.96%
+New best model saved with validation accuracy: 57.96%
+Epoch 22/25 [Train]: 100%|██████████| 180/180 [00:25<00:00,  7.07it/s, loss=0.671, acc=99.0%]
+Epoch 22/25, Train Loss: 0.6614, Train Acc: 99.02%, Val Loss: 1.6617, Val Acc: 58.22%
+New best model saved with validation accuracy: 58.22%
+Epoch 23/25 [Train]: 100%|██████████| 180/180 [00:26<00:00,  6.88it/s, loss=0.640, acc=99.2%]
+Epoch 23/25, Train Loss: 0.6570, Train Acc: 99.23%, Val Loss: 1.6643, Val Acc: 58.17%
+Epoch 24/25 [Train]: 100%|██████████| 180/180 [00:25<00:00,  6.93it/s, loss=0.643, acc=99.4%]
+Epoch 24/25, Train Loss: 0.6530, Train Acc: 99.38%, Val Loss: 1.6667, Val Acc: 58.10%
+Epoch 25/25 [Train]: 100%|██████████| 180/180 [00:25<00:00,  6.99it/s, loss=0.662, acc=99.5%]
+Epoch 25/25, Train Loss: 0.6522, Train Acc: 99.46%, Val Loss: 1.6704, Val Acc: 58.38%
+New best model saved with validation accuracy: 58.38%
+Training completed. Best validation accuracy: 58.38%
+
+
+
+
+ძალიან მარალი train acc მარა ბევრად დავალი validation accuracy: 58.38%
+
+ნუ რათქმაუნდა overfit-ში წავიდა. როგორც დავარესერჩე შეილება ძალიან კომპლექსური მოდელია დატასეტთან შედარებით და პირდაპირ დაიზეპირა.
+ამიტომ გავამკაცროთ რეგულარიზაცია. მარა ჯობია ბარემ დაასრულოს run და შემდეგ experiment 5 ად გავუშვებ იგივეს ოღნდ გავუზრდი რეგულარიზაციას.
+
+კაი ნუ შედეგები ასე გამოიყურება.
+
+Epoch 18/25 [Train]: 100%|██████████| 180/180 [00:25<00:00,  7.08it/s, loss=0.693, acc=96.0%]
+Epoch 18/25, Train Loss: 0.7243, Train Acc: 96.00%, Val Loss: 1.6592, Val Acc: 56.91%
+New best model saved with validation accuracy: 56.91%
+Epoch 19/25 [Train]: 100%|██████████| 180/180 [00:25<00:00,  7.06it/s, loss=0.763, acc=97.2%]
+Epoch 19/25, Train Loss: 0.7000, Train Acc: 97.20%, Val Loss: 1.6460, Val Acc: 57.78%
+New best model saved with validation accuracy: 57.78%
+Epoch 20/25 [Train]: 100%|██████████| 180/180 [00:25<00:00,  7.13it/s, loss=0.684, acc=97.9%]
+Epoch 20/25, Train Loss: 0.6838, Train Acc: 97.94%, Val Loss: 1.6796, Val Acc: 57.77%
+Epoch 21/25 [Train]: 100%|██████████| 180/180 [00:25<00:00,  7.19it/s, loss=0.738, acc=98.6%]
+Epoch 21/25, Train Loss: 0.6707, Train Acc: 98.60%, Val Loss: 1.6724, Val Acc: 57.96%
+New best model saved with validation accuracy: 57.96%
+Epoch 22/25 [Train]: 100%|██████████| 180/180 [00:25<00:00,  7.07it/s, loss=0.671, acc=99.0%]
+Epoch 22/25, Train Loss: 0.6614, Train Acc: 99.02%, Val Loss: 1.6617, Val Acc: 58.22%
+New best model saved with validation accuracy: 58.22%
+Epoch 23/25 [Train]: 100%|██████████| 180/180 [00:26<00:00,  6.88it/s, loss=0.640, acc=99.2%]
+Epoch 23/25, Train Loss: 0.6570, Train Acc: 99.23%, Val Loss: 1.6643, Val Acc: 58.17%
+Epoch 24/25 [Train]: 100%|██████████| 180/180 [00:25<00:00,  6.93it/s, loss=0.643, acc=99.4%]
+Epoch 24/25, Train Loss: 0.6530, Train Acc: 99.38%, Val Loss: 1.6667, Val Acc: 58.10%
+Epoch 25/25 [Train]: 100%|██████████| 180/180 [00:25<00:00,  6.99it/s, loss=0.662, acc=99.5%]
+Epoch 25/25, Train Loss: 0.6522, Train Acc: 99.46%, Val Loss: 1.6704, Val Acc: 58.38%
+New best model saved with validation accuracy: 58.38%
+Training completed. Best validation accuracy: 58.38%
+
+Best run: wise-sweep-1
+Best validation accuracy: 58.38%
+Best hyperparameters: {'epochs': 25, 'patience': 8, 'batch_size': 128, 'dropout_rate': 0.3362882088171564, 'weight_decay': 7.043022279825436e-05, 'learning_rate': 0.001110935709956254, 'label_smoothing': 0.1560930322152969}
+
+გავაუარესეთ შედეგი.
+
+https://wandb.ai/konstantine25b-free-university-of-tbilisi-/Facial_Expression_Recognition_4/runs/i1z98amg
+
+
+# Experiment 5
+
+ფაილი: Facial_Expression_Recognition_5.ipynb
+
+ახლა გავუკეთოთ უკეთესი რეგულარიზაცია რადგან  წინა ექსპერიმენტში ძაან კომპლექსური მოდელი გვქონდა და ოვერფიტში წავიდა.
+ზუსტად იგივე მოდელი ოღონდ ამ ცვლილებებით.
+
+def get_transforms():
+    train_transform = transforms.Compose([
+        transforms.ToPILImage(),
+        transforms.RandomHorizontalFlip(p=0.5),
+        transforms.RandomRotation(10),
+        transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.1, hue=0.1),
+        transforms.RandomAffine(degrees=0, scale=(0.8, 1.2)),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5,), (0.5,))
+    ])
+
+    ეს გავამკაცროთ ასე:
+
+     transforms.ToPILImage(),
+        transforms.RandomHorizontalFlip(p=0.5),
+        transforms.RandomRotation(15),
+        transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.2, hue=0.1),
+        transforms.RandomAffine(degrees=0, scale=(0.7, 1.3)),
+        transforms.RandomErasing(p=0.3, scale=(0.02, 0.15)),
+        transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 2.0)),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5,), (0.5,)) 
+
+ასევე 
+dropout 
+'min': 0.5,      
+'max': 0.8  
+
+ხოლო weight_decay
+'min': 1e-4,     
+'max': 1e-2      
+
+learning_rate
+'min': 0.00005,   
+'max': 0.005 
+
+ასევე 
+
+ def __init__(self, num_classes=7, dropout_rate=0.5):
+        super(FacialExpressionResNet, self).__init__()
+        
+        self.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3, bias=False)
+        self.bn1 = nn.BatchNorm2d(64)
+        self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+        
+        self.layer1 = self._make_layer(64, 64, 2, stride=1)
+        self.layer2 = self._make_layer(64, 128, 2, stride=2)
+        self.layer3 = self._make_layer(128, 256, 2, stride=2)
+        self.layer4 = self._make_layer(256, 512, 2, stride=2)
+        
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        self.dropout = nn.Dropout(dropout_rate)
+        self.fc = nn.Linear(512, num_classes)
+        
+        self._initialize_weights()
+
+
+class FacialExpressionResNet(nn.Module):
+    def __init__(self, num_classes=7, dropout_rate=0.5):
+        super(FacialExpressionResNet, self).__init__()
+        
+        self.conv1 = nn.Conv2d(1, 32, kernel_size=7, stride=2, padding=3, bias=False)  # Reduce from 64
+        self.bn1 = nn.BatchNorm2d(32)
+        self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+        
+        self.layer1 = self._make_layer(32, 64, 2, stride=1)    # Reduce channels
+        self.layer2 = self._make_layer(64, 128, 2, stride=2)
+        self.layer3 = self._make_layer(128, 256, 2, stride=2)  # Remove layer4
+        
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        self.dropout = nn.Dropout(dropout_rate)
+        self.fc = nn.Linear(256, num_classes)
+
+
+დავაკლოთ 1 ლეიერი.
+
+def __init__(self, num_classes=7, dropout_rate=0.5):
+        super(FacialExpressionResNet, self).__init__()
+        
+        self.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3, bias=False)
+        self.bn1 = nn.BatchNorm2d(64)
+        self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+        
+        self.layer1 = self._make_layer(64, 64, 2, stride=1)
+        self.layer2 = self._make_layer(64, 128, 2, stride=2)
+        self.layer3 = self._make_layer(128, 256, 2, stride=2)
+
+        
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        self.dropout = nn.Dropout(dropout_rate)
+        self.fc = nn.Linear(256, num_classes)
+        
+        self._initialize_weights()
