@@ -789,7 +789,8 @@ wandb:   1 of 1 files downloaded.
 
 # experiment 6
 
-ფაილი: Facial_Expression_Recognition_6.ipynb
+( რაღაცა პრობლემა ქონდა ამიტო 7 იქნება ფაილის სახელი)
+ფაილი: Facial_Expression_Recognition_7.ipynb
 
 კაი ნუ ბოლო ორ ექსპერიმენტში ძალიან კომპლექსური მოდელი გამოვიდა სწორედ ამიტომ
 მოდელი ძალიან წავიდა overfit-ში ამიტო დვანაებით თავი ასეთი კომპლექსური მოდელის კეთებას და გავამარტივოთ.
@@ -800,12 +801,16 @@ wandb:   1 of 1 files downloaded.
 ასევე ნაკლები რეგულარიზაციები.
 train_transform = transforms.Compose([
         transforms.ToPILImage(),
+        transforms.Pad(4),
+        transforms.RandomCrop(48),
         transforms.RandomHorizontalFlip(p=0.3),
         transforms.RandomRotation(10),
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,))
     ])
-
+transforms.Pad(4),
+transforms.RandomCrop(48),
+eseni davamate ro 0ების პადინგი მქონდეს.
 ნუ 3 residual block და 1 cnn
 
 sweep_config = {
@@ -823,7 +828,66 @@ sweep_config = {
 }
 აქაც ყველაფერში ნაკლები რეგულარიზაცია.
 
+
 კაი დავიწყოთ ტრეინინგი. 
 
 ვნახოთ test_overfit რას იზამს:
 
+Testing simple ResNet architecture with overfitting on small dataset...
+Overfit Epoch 1/30, Loss: 1.9199, Acc: 25.00%
+Overfit Epoch 2/30, Loss: 1.6423, Acc: 40.00%
+Overfit Epoch 3/30, Loss: 1.5754, Acc: 40.00%
+Overfit Epoch 4/30, Loss: 1.5327, Acc: 40.00%
+Overfit Epoch 5/30, Loss: 1.4881, Acc: 40.00%
+Overfit Epoch 6/30, Loss: 1.4460, Acc: 40.00%
+Overfit Epoch 7/30, Loss: 1.4089, Acc: 40.00%
+Overfit Epoch 8/30, Loss: 1.3815, Acc: 40.00%
+Overfit Epoch 9/30, Loss: 1.3236, Acc: 40.00%
+Overfit Epoch 10/30, Loss: 1.2618, Acc: 40.00%
+Overfit Epoch 11/30, Loss: 1.2136, Acc: 40.00%
+Overfit Epoch 12/30, Loss: 1.1741, Acc: 50.00%
+Overfit Epoch 13/30, Loss: 1.1043, Acc: 55.00%
+Overfit Epoch 14/30, Loss: 1.0402, Acc: 55.00%
+Overfit Epoch 15/30, Loss: 0.9781, Acc: 60.00%
+Overfit Epoch 16/30, Loss: 0.9043, Acc: 60.00%
+Overfit Epoch 17/30, Loss: 0.8446, Acc: 60.00%
+Overfit Epoch 18/30, Loss: 0.7780, Acc: 80.00%
+Overfit Epoch 19/30, Loss: 0.7111, Acc: 90.00%
+Overfit Epoch 20/30, Loss: 0.6520, Acc: 90.00%
+Overfit Epoch 21/30, Loss: 0.5895, Acc: 100.00%
+Simple ResNet can overfit successfully!
+Overfitting test completed.
+
+ეს კარგია ანუ ვანიშინგ გრადიენტის პრობელმა არ გვაქ.
+
+https://wandb.ai/konstantine25b-free-university-of-tbilisi-/Facial_Expression_Recognition_6/sweeps/3ss2257j
+
+გავუშვი და 1-2 საათი დაჭირდება კიდევ.
+Epoch 10/25 [Train]: 100%|██████████| 359/359 [00:26<00:00, 13.68it/s, loss=1.463, acc=63.5%]
+Epoch 10/25, Train Loss: 1.4189, Train Acc: 63.53%, Val Loss: 1.4767, Val Acc: 58.85%, Gap: 4.68%
+New best model saved with validation accuracy: 58.85%
+Epoch 11/25 [Train]: 100%|██████████| 359/359 [00:26<00:00, 13.66it/s, loss=1.272, acc=66.2%]
+Epoch 11/25, Train Loss: 1.3867, Train Acc: 66.16%, Val Loss: 1.5320, Val Acc: 56.20%, Gap: 9.96%
+Epoch 12/25 [Train]: 100%|██████████| 359/359 [00:26<00:00, 13.47it/s, loss=1.336, acc=68.4%]
+Epoch 12/25, Train Loss: 1.3564, Train Acc: 68.38%, Val Loss: 1.5348, Val Acc: 55.78%, Gap: 12.59%
+Epoch 13/25 [Train]: 100%|██████████| 359/359 [00:26<00:00, 13.60it/s, loss=1.255, acc=71.1%]
+Epoch 13/25, Train Loss: 1.3233, Train Acc: 71.12%, Val Loss: 1.5377, Val Acc: 55.76%, Gap: 15.36%
+Epoch 14/25 [Train]: 100%|██████████| 359/359 [00:26<00:00, 13.64it/s, loss=1.193, acc=74.1%]
+Epoch 14/25, Train Loss: 1.2872, Train Acc: 74.11%, Val Loss: 1.5096, Val Acc: 57.87%, Gap: 16.24%
+Early stopping triggered after 14 epochs
+Training completed. Best validation accuracy: 58.85%
+
+Best run: wise-sweep-2
+Best validation accuracy: 58.85%
+Best hyperparameters: {'epochs': 25, 'patience': 4, 'batch_size': 64, 'dropout_rate': 0.36102178971367016, 'weight_decay': 0.0022730632370258973, 'learning_rate': 0.00408643259183888, 'label_smoothing': 0.2236615416461067}
+wandb:   1 of 1 files downloaded. 
+
+სამწუხაროდ ესეც ოვერფიტში მიდის და არ მუშაობს კარგად.
+მოკლედ მთავარი გაკვეთილი მივიღე არ უნდა მეცადა ეგრევე ძალიან გაუმჯობესება.
+მარა აწი მეცოდეინება. 
+
+# Experiment 8
+
+კაი რახან მივიღე ეს გაკვეთილი ამიტომ ჯობია დავუბრუნდე მე-3 ექსპერიმენტს რადგან მანდ მაქ ყველაზე კარგი შედეგი 61%.
+
+ოღონდ ეხა გავაუმჯობესებ შეძლებისდაგვარად.
