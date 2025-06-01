@@ -752,3 +752,78 @@ def __init__(self, num_classes=7, dropout_rate=0.5):
         self.fc = nn.Linear(256, num_classes)
         
         self._initialize_weights()
+
+ტესტზე 50 ცალი ეპოქა ავიღე რადგან დიდი დროფაუთი გვაქ და ასევე დიდი რეგულარიზაციაც.
+
+https://wandb.ai/konstantine25b-free-university-of-tbilisi-/Facial_Expression_Recognition_5/sweeps/als3wxaz
+
+ალბათ ესეც 1-2 საათს წაიღებს როგორც წინა.
+
+Epoch 15/30 [Train]: 100%|██████████| 718/718 [00:30<00:00, 23.49it/s, loss=1.098, acc=79.4%]
+Epoch 15/30, Train Loss: 1.1932, Train Acc: 79.38%, Val Loss: 1.5374, Val Acc: 57.56%, Gap: 21.82%
+Epoch 16/30 [Train]: 100%|██████████| 718/718 [00:29<00:00, 24.28it/s, loss=1.289, acc=70.8%]
+Epoch 16/30, Train Loss: 1.3130, Train Acc: 70.76%, Val Loss: 1.5457, Val Acc: 54.79%, Gap: 15.97%
+Epoch 17/30 [Train]: 100%|██████████| 718/718 [00:30<00:00, 23.72it/s, loss=1.205, acc=74.0%]
+Epoch 17/30, Train Loss: 1.2710, Train Acc: 74.03%, Val Loss: 1.5503, Val Acc: 56.15%, Gap: 17.88%
+Epoch 18/30 [Train]: 100%|██████████| 718/718 [00:30<00:00, 23.77it/s, loss=1.181, acc=79.4%]
+Epoch 18/30, Train Loss: 1.1926, Train Acc: 79.35%, Val Loss: 1.5552, Val Acc: 56.90%, Gap: 22.46%
+Epoch 19/30 [Train]: 100%|██████████| 718/718 [00:29<00:00, 24.07it/s, loss=1.212, acc=84.0%]
+Epoch 19/30, Train Loss: 1.1274, Train Acc: 83.95%, Val Loss: 1.5735, Val Acc: 57.12%, Gap: 26.83%
+Epoch 20/30 [Train]: 100%|██████████| 718/718 [00:30<00:00, 23.55it/s, loss=0.984, acc=87.0%]
+Epoch 20/30, Train Loss: 1.0824, Train Acc: 86.96%, Val Loss: 1.5798, Val Acc: 57.04%, Gap: 29.93%
+Epoch 21/30 [Train]: 100%|██████████| 718/718 [00:30<00:00, 23.52it/s, loss=1.116, acc=78.2%]
+Epoch 21/30, Train Loss: 1.2070, Train Acc: 78.19%, Val Loss: 1.5594, Val Acc: 56.46%, Gap: 21.72%
+Epoch 22/30 [Train]: 100%|██████████| 718/718 [00:30<00:00, 23.41it/s, loss=1.148, acc=80.3%]
+Epoch 22/30, Train Loss: 1.1762, Train Acc: 80.32%, Val Loss: 1.5744, Val Acc: 56.30%, Gap: 24.02%
+Early stopping triggered after 22 epochs
+Training completed. Best validation accuracy: 57.65%
+
+
+Best run: lyric-sweep-1
+Best validation accuracy: 57.65%
+Best hyperparameters: {'epochs': 30, 'patience': 8, 'batch_size': 32, 'dropout_rate': 0.5479010231390392, 'weight_decay': 0.0007072641496874819, 'learning_rate': 0.0003507942900207464, 'label_smoothing': 0.22223961117304525}
+wandb:   1 of 1 files downloaded. 
+
+აქაც აღმჩნდა რომ კიდევ ოვერფიტში მიდის ამიტომ უნდა გავამარტივთ მოდელი.
+
+
+# experiment 6
+
+ფაილი: Facial_Expression_Recognition_6.ipynb
+
+კაი ნუ ბოლო ორ ექსპერიმენტში ძალიან კომპლექსური მოდელი გამოვიდა სწორედ ამიტომ
+მოდელი ძალიან წავიდა overfit-ში ამიტო დვანაებით თავი ასეთი კომპლექსური მოდელის კეთებას და გავამარტივოთ.
+
+კაი ნუ იგივე ყველაფერი მაგრამ ცვლილებები არის ასეთი:
+
+ეხა resedual block გვექნება უფრო პატარა 
+ასევე ნაკლები რეგულარიზაციები.
+train_transform = transforms.Compose([
+        transforms.ToPILImage(),
+        transforms.RandomHorizontalFlip(p=0.3),
+        transforms.RandomRotation(10),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5,), (0.5,))
+    ])
+
+ნუ 3 residual block და 1 cnn
+
+sweep_config = {
+    'method': 'bayes',
+    'metric': {'name': 'best_val_accuracy', 'goal': 'maximize'},
+    'parameters': {
+        'learning_rate': {'distribution': 'log_uniform_values', 'min': 0.0005, 'max': 0.005},
+        'batch_size': {'values': [64, 128]},
+        'dropout_rate': {'distribution': 'uniform', 'min': 0.3, 'max': 0.6},
+        'weight_decay': {'distribution': 'log_uniform_values', 'min': 1e-4, 'max': 1e-2},
+        'label_smoothing': {'distribution': 'uniform', 'min': 0.1, 'max': 0.3},
+        'epochs': {'value': 20},
+        'patience': {'value': 4}
+    }
+}
+აქაც ყველაფერში ნაკლები რეგულარიზაცია.
+
+კაი დავიწყოთ ტრეინინგი. 
+
+ვნახოთ test_overfit რას იზამს:
+
