@@ -891,3 +891,84 @@ wandb:   1 of 1 files downloaded.
 კაი რახან მივიღე ეს გაკვეთილი ამიტომ ჯობია დავუბრუნდე მე-3 ექსპერიმენტს რადგან მანდ მაქ ყველაზე კარგი შედეგი 61%.
 
 ოღონდ ეხა გავაუმჯობესებ შეძლებისდაგვარად.
+
+მოკლედ მესამე მოდელში ჩავამატებ 1 ცალ რესნეტ ლეიერს + 
+
+transforms.ToPILImage(),
+        transforms.Pad(4),
+        transforms.RandomCrop(48),
+        transforms.RandomHorizontalFlip(p=0.3),
+        transforms.RandomRotation(10),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5,), (0.5,))
+
+ასევე დავამატე ნორმალიზაცია ანუ image.astype(np.float32) / 255.0
+
+აი ესეთი იქნება:
+conv1(1→32) → pool → conv2(32→64) → pool → ResNetBlock(64→128, stride=2) → conv3(128→128) → pool → fc
+
+
+გავუშვი ტესტზე 
+
+Testing enhanced CNN with ResNet block on small dataset...
+Testing enhanced CNN with ResNet block on small dataset...
+Overfit Epoch 1/30, Loss: 1.8787, Acc: 25.00%
+Overfit Epoch 2/30, Loss: 0.6527, Acc: 100.00%
+Enhanced CNN can overfit successfully!
+Overfitting test completed.
+
+რავი ძაან სწრაფად კი ქნა მარა მაინც ვნახოთ.
+
+დავიწყოთ ტრეინინგ ალბათ 2 საათი იქნება საჭირო რადგან ეპოქები აიღე 30 და თან wandb.agent(sweep_id, train_model, count=5).ანუ 5 ჯერ გატესტავს სხვადასხვა ჰიპერპარამეტრებით.
+
+
+https://wandb.ai/konstantine25b-free-university-of-tbilisi-/Facial_Expression_Recognition_8/?nw=nwuserkonstantine25b
+
+მგონია რო საუკეთესო მოდელი ეს იქნება. ვნახოთ აბა რას იზამს.
+
+ასევე იქიდან გამომდინარე რომ უფრო კომპლექსურები გატესტილი მაქ და ცუდი შედეგი დამიდო ამიტომ ამაზე მეტად კომპლექსურის გატესტვას ვფიქრობ აღარ ექნება აზრი ანუ აზრი ექენაბ მარა ძაააან დიდი დრო წაიღო ისედაც ამიტო იმედია ამ მოდელზე გავჩერდები ამ დავალებისთვის.
+
+მოკლედ 2 საათზე მეტი ხანი დაჭირდა და გამომაგდო მაგრამ 65% იყო ვალიდაცია.
+ნუ ამიტო ახლიდან გავუშვებ 5 ეპოქით ოღონდ, და იდეაშ მერე საუკეთესო ჰიპერპარამეტრებით ახლიდან დავატრეინენგიებ ერთს 40 ეპოქაზე წესით.
+
+მოკლედ თურმე იმიტო გამეთიშა რომ ამომიწურავს კოლაბის gpu limit.
+
+ანუ სანამ არ გამიგრძელებენ ვერ გავაგრძელებ დავალებას. ამიტო დაველოდოთ.
+
+კაი 12 საათი გავიდა ან ცოტა მეტი იდეაში და ვაგრძელებ გავუშვი 5 ეპოქაზე 5 ნაირი ჰიპერპარამეტრებით.
+wandb.agent(sweep_id, train_model, count=5)
+საუკეთესოს ავარჩევ და დავატრეინინგებ შემდეგ ბევრ ეპოქზე.
+
+აქედან ამ 5-ზე გვაქ ასეთი შედეგები: 
+Training completed. Best validation accuracy: 51.54%
+Training completed. Best validation accuracy: 56.03%
+Training completed. Best validation accuracy: 56.05%
+Training completed. Best validation accuracy: 55.97%
+Training completed. Best validation accuracy: 56.74%
+
+კაი ნუ რთული აღმოჩნდა მაინც საუკეთესო პარამეტრების არჩევა მაგრამ
+ხო ნუ ვერ ვხვდები მაინც რომელი ჯობდა ამიტომ ახლიდან გავუშვი 8 ეპოქაზე.
+
+ნუ იმიტომ ვერ ვხვდები რო 5 ეპოქა აღმოჩნდა საკმარისი დასკვნისთვის.
+
+გავუშვი ვნახოთ აბა რომელი ჰიპერპარამეტრები ჯობია.
+
+Training completed. Best validation accuracy: 57.62%
+Training completed. Best validation accuracy: 56.51%
+Training completed. Best validation accuracy: 55.37%
+Training completed. Best validation accuracy: 55.66%
+Training completed. Best validation accuracy: 52.82%
+
+მოკლედ პირველი ჯობდა და მაგის ჰიპერპარამეტრებს გამოვიყენებ ანუ:
+wandb: Agent Starting Run: vwx2z668 with config:
+wandb: 	batch_size: 64
+wandb: 	dropout_rate: 0.337528658373042
+wandb: 	epochs: 8
+wandb: 	hidden_dim: 256
+wandb: 	learning_rate: 0.002132563918843244
+wandb: 	patience: 5
+wandb: 	weight_decay: 0.00017690014034959468
+
+	batch_size: 64, dropout_rate: 0.35 , epochs: 40, hidden_dim: 256, learning_rate: 0.002 , weight_decay: 0.00018
+
+  აი ესეთზე გავუშვებ შემდეგს
