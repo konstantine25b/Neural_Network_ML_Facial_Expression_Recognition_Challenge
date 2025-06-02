@@ -888,6 +888,8 @@ wandb:   1 of 1 files downloaded.
 
 # Experiment 8
 
+Facial_Expression_Recognition_8.ipynb
+
 კაი რახან მივიღე ეს გაკვეთილი ამიტომ ჯობია დავუბრუნდე მე-3 ექსპერიმენტს რადგან მანდ მაქ ყველაზე კარგი შედეგი 61%.
 
 ოღონდ ეხა გავაუმჯობესებ შეძლებისდაგვარად.
@@ -972,3 +974,14 @@ wandb: 	weight_decay: 0.00017690014034959468
 	batch_size: 64, dropout_rate: 0.35 , epochs: 40, hidden_dim: 256, learning_rate: 0.002 , weight_decay: 0.00018
 
   აი ესეთზე გავუშვებ შემდეგს
+
+
+# Experiment 9
+
+Facial_Expression_Recognition_9.ipynb
+
+იგივე რაც მე-8 ოღონდ 
+	batch_size: 64, dropout_rate: 0.35 , epochs: 40, hidden_dim: 256, learning_rate: 0.002 , weight_decay: 0.00018
+
+  ამეებით.
+
