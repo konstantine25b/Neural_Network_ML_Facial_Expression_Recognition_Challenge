@@ -985,3 +985,111 @@ Facial_Expression_Recognition_9.ipynb
 
   ამეებით.
 
+თავისთავად ამომეწურა დღევანდელი ლიმიტიც იმიტორო ცოტა რაღაცეები არასწორად გავუშვი და ემრე ვერ გამოვრთე და როგორც ჩანს gpu შეჭამა.
+ხვალ გვაგრძელებ.
+
+ნუ დღესაც ვნახე და არ მაქ ლიმიტი ამიტო მოდი cpu-ზე გავუშვებ იქნებ არ დაჭირდეს ძაან დიდი დრო.
+ნუ 40 ეპოქიანს კი ვატრეინინგებ მარა მაინც.
+https://wandb.ai/konstantine25b-free-university-of-tbilisi-/Facial_Expression_Recognition_9
+
+
+1 საათი და 18 წუთი გავიდა და ეხა არის 25 ეპოქაზე ნუ კარგი შედეგი აქვს:
+Epoch 20/40 [Train]: 100%|██████████| 323/323 [02:47<00:00,  1.92it/s, loss=1.028, acc=59.3%]
+Epoch 20/40, Train Loss: 1.0716, Train Acc: 59.30%, Val Loss: 1.1043, Val Acc: 59.80%
+Epoch 21/40 [Train]: 100%|██████████| 323/323 [02:45<00:00,  1.95it/s, loss=0.928, acc=60.2%]
+Epoch 21/40, Train Loss: 1.0586, Train Acc: 60.16%, Val Loss: 1.1017, Val Acc: 58.04%
+Epoch 22/40 [Train]: 100%|██████████| 323/323 [02:44<00:00,  1.96it/s, loss=1.097, acc=62.2%]
+Epoch 22/40, Train Loss: 1.0038, Train Acc: 62.16%, Val Loss: 1.0222, Val Acc: 62.47%
+New best model saved with validation accuracy: 62.47%
+Epoch 23/40 [Train]: 100%|██████████| 323/323 [02:46<00:00,  1.93it/s, loss=0.867, acc=63.0%]
+Epoch 23/40, Train Loss: 0.9844, Train Acc: 62.99%, Val Loss: 1.0435, Val Acc: 61.58%
+Epoch 24/40 [Train]: 100%|██████████| 323/323 [02:47<00:00,  1.93it/s, loss=1.129, acc=63.4%]
+Epoch 24/40, Train Loss: 0.9787, Train Acc: 63.44%, Val Loss: 1.0045, Val Acc: 62.34%
+Epoch 25/40 [Train]: 100%|██████████| 323/323 [02:45<00:00,  1.95it/s, loss=0.877, acc=63.5%]
+Epoch 25/40, Train Loss: 0.9685, Train Acc: 63.54%, Val Loss: 1.0121, Val Acc: 63.21%
+New best model saved with validation accuracy: 63.21%
+
+63 %ზე ვართ ამიტო კაი შედეგისკენ მივდივართ.
+
+2 საათი გავიდა
+
+Epoch 29/40, Train Loss: 0.9360, Train Acc: 64.81%, Val Loss: 1.0203, Val Acc: 62.67%
+Epoch 30/40 [Train]: 100%|██████████| 323/323 [03:09<00:00,  1.70it/s, loss=1.067, acc=65.7%]
+Epoch 30/40, Train Loss: 0.9331, Train Acc: 65.71%, Val Loss: 1.0394, Val Acc: 62.86%
+Epoch 31/40 [Train]: 100%|██████████| 323/323 [03:24<00:00,  1.58it/s, loss=0.841, acc=65.2%]
+Epoch 31/40, Train Loss: 0.9276, Train Acc: 65.20%, Val Loss: 1.0105, Val Acc: 63.73%
+Epoch 32/40 [Train]: 100%|██████████| 323/323 [03:49<00:00,  1.41it/s, loss=1.066, acc=65.5%]
+Epoch 32/40, Train Loss: 0.9160, Train Acc: 65.51%, Val Loss: 1.0062, Val Acc: 64.10%
+New best model saved with validation accuracy: 64.10%
+64% ზე ავედით.
+
+
+
+Epoch 37/40 [Train]: 100%|██████████| 323/323 [07:30<00:00,  1.39s/it, loss=0.800, acc=68.0%]
+Epoch 37/40, Train Loss: 0.8557, Train Acc: 68.03%, Val Loss: 1.0026, Val Acc: 64.41%
+New best model saved with validation accuracy: 64.41%
+Epoch 38/40 [Train]: 100%|██████████| 323/323 [07:53<00:00,  1.47s/it, loss=0.832, acc=68.9%]
+Epoch 38/40, Train Loss: 0.8412, Train Acc: 68.93%, Val Loss: 0.9967, Val Acc: 65.20%
+New best model saved with validation accuracy: 65.20%
+
+65% ზეც ავედით თან აქ გავითვალისწინოთ ისიც რომ training accuracy და validation accuracy-ში სხვაობა 3% ია ანუ მშვენივრად მივდივართ. არ ვარ ოვერფიტში და კარგად მუშაობს.
+
+Epoch 35/40, Train Loss: 0.9016, Train Acc: 66.07%, Val Loss: 1.0072, Val Acc: 63.40%
+Epoch 36/40 [Train]: 100%|██████████| 323/323 [06:51<00:00,  1.27s/it, loss=1.251, acc=66.2%]
+Epoch 36/40, Train Loss: 0.9026, Train Acc: 66.15%, Val Loss: 1.0113, Val Acc: 62.98%
+Epoch 37/40 [Train]: 100%|██████████| 323/323 [07:30<00:00,  1.39s/it, loss=0.800, acc=68.0%]
+Epoch 37/40, Train Loss: 0.8557, Train Acc: 68.03%, Val Loss: 1.0026, Val Acc: 64.41%
+New best model saved with validation accuracy: 64.41%
+Epoch 38/40 [Train]: 100%|██████████| 323/323 [07:53<00:00,  1.47s/it, loss=0.832, acc=68.9%]
+Epoch 38/40, Train Loss: 0.8412, Train Acc: 68.93%, Val Loss: 0.9967, Val Acc: 65.20%
+New best model saved with validation accuracy: 65.20%
+Epoch 39/40 [Train]: 100%|██████████| 323/323 [08:14<00:00,  1.53s/it, loss=0.854, acc=69.1%]
+Epoch 39/40, Train Loss: 0.8268, Train Acc: 69.05%, Val Loss: 1.0000, Val Acc: 64.91%
+Epoch 40/40 [Train]: 100%|██████████| 323/323 [08:35<00:00,  1.60s/it, loss=0.690, acc=69.7%]
+Epoch 40/40, Train Loss: 0.8138, Train Acc: 69.70%, Val Loss: 1.0055, Val Acc: 64.45%
+Training completed. Best validation accuracy: 65.20%
+
+
+დაასრულა 2 საათ ნახევრის შემდეგ როგორც იქნა.
+
+იქიდან გამომდინარე რომ late submission-ფუნქცია არ აქვს kaggle-ს 
+ამ კონკრეტულ ცჰალლენგზე რავი მხოლოდ csv ფაილს დავაბეჭდინებ და ტესტსეტად ავიღებ train-ის ნაწილს.
+
+Evaluating best model on test set...
+Test Accuracy: 65.15%
+Test Loss: 0.9481
+
+Classification Report:
+              precision    recall  f1-score   support
+
+       Angry       0.63      0.53      0.58       434
+     Disgust       0.64      0.47      0.54        34
+        Fear       0.47      0.44      0.45       363
+       Happy       0.83      0.89      0.86       714
+         Sad       0.52      0.60      0.55       478
+    Surprise       0.79      0.69      0.74       343
+     Neutral       0.58      0.61      0.59       506
+
+    accuracy                           0.65      2872
+   macro avg       0.64      0.60      0.62      2872
+weighted avg       0.65      0.65      0.65      2872
+
+ესეთი მივიღეთ ვფიქრობ რომ კარგი მოდელია.
+
+https://wandb.ai/konstantine25b-free-university-of-tbilisi-/Facial_Expression_Recognition_9/runs/d86eh1xs?nw=nwuserkonstantine25b
+
+ანუ 
+
+Test Accuracy: 65.15%
+Test Loss: 0.9481
+
+მშვენიერია score არის ასეთი დატასეტისთვის ჩემი აზრით.
+
+
+
+ნუ საბოლოოდ კაი დავალება იყო, მიუხედავად იმისა რო ბოლო ორი ფდღე gpu-მ გამაწამა და საბოლოოდ cpu-ს გამოყენება მომიწია.
+
+Test Accuracy: 65.15%
+Test Loss: 0.9481
+
+შედეგი ესარი და ეგარი დავასრულეთ დავალება. :)
